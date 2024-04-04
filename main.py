@@ -27,7 +27,7 @@ class BusinessList:
     """holds list of Business objects,
     and save to both excel and csv
     """
-    business_list: list[Business] = field(default_factory=list)
+    business_list: 'list[Business]' = field(default_factory=list)
     save_at = 'output'
 
     def dataframe(self):
@@ -40,28 +40,28 @@ class BusinessList:
         )
 
     def save_to_excel(self, filename):
-        """saves pandas dataframe to excel (xlsx) file
+        """Saves pandas dataframe to Excel (xlsx) file.
 
         Args:
-            filename (str): filename
+            filename (str): Filename for the Excel file.
         """
-
         if not os.path.exists(self.save_at):
             os.makedirs(self.save_at)
-        self.dataframe().to_excel(f"output/{filename}.xlsx", index=False)
+        excel_filename = os.path.join(self.save_at, f"{filename.strip()}.xlsx")
+        self.dataframe().to_excel(excel_filename, index=False)
 
     def save_to_csv(self, filename):
-        """saves pandas dataframe to csv file
+        """Saves pandas dataframe to CSV file.
 
         Args:
-            filename (str): filename
+            filename (str): Filename for the CSV file.
         """
-
         if not os.path.exists(self.save_at):
             os.makedirs(self.save_at)
-        self.dataframe().to_csv(f"output/{filename}.csv", index=False)
+        csv_filename = os.path.join(self.save_at, f"{filename.strip()}.csv")
+        self.dataframe().to_csv(csv_filename, index=False)
 
-def extract_coordinates_from_url(url: str) -> tuple[float,float]:
+def extract_coordinates_from_url(url: str) -> 'tuple[float, float]':
     """helper function to extract coordinates from url"""
     
     coordinates = url.split('/@')[-1].split('/')[0]
@@ -233,10 +233,12 @@ def main():
                     business_list.business_list.append(business)
                 except Exception as e:
                     print(f'Error occured: {e}')
+                    
             
             #########
             # output
             #########
+            print(business_list, ':business_list')
             business_list.save_to_excel(f"google_maps_data_{search_for}".replace(' ', '_'))
             business_list.save_to_csv(f"google_maps_data_{search_for}".replace(' ', '_'))
 
